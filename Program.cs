@@ -1,99 +1,128 @@
-﻿using System; // Required to use Console methods like WriteLine and ReadLine
-using System.Linq; // <--- AÑADIDO: Necesario para usar .All()
+﻿using System;
+using System.Linq;
 
 namespace RegentHealthBookingSystem
 {
     class Program
     {
-        // The Main method is the entry point of the application
-        // This is where the execution starts (like index[0] for the CPU)
         static void Main(string[] args)
         {
-            // PASO VITAL: Creamos el sistema antes de los bucles
+            // Inicializamos el sistema
             BookingSystem system = new BookingSystem();
-            
-            // Requirement 1: Login System
-            // Declare the boolean as false initially because the userD is not yet logged in
             bool isAuthenticated = false;
 
             Console.WriteLine("--- System Of Gestion Regent Health ---");
 
-            // Loop continues while isAuthenticated is false (! means NOT)
+            // --- SISTEMA DE LOGIN ---
             while (!isAuthenticated)
             {
-                // Asking the user to input the username 
                 Console.Write("\nUsername: ");
                 string user = Console.ReadLine();
 
-                // Asking the user for the password 
                 Console.Write("Password: ");
                 string passWord = Console.ReadLine();
 
-                // Validation: Check if credentials match the predefined requirements
-                // We use '&&' (AND) because both conditions must be true
                 if (user == "D" && passWord == "R")
                 {
-                    // If credentials match, set boolean to true to exit the loop
                     isAuthenticated = true;
                     Console.WriteLine("\n✓ Login successful. Welcome, Doctor!");
                 }
                 else
                 {
-                    // In case of an error, display this warning and the loop restarts
                     Console.WriteLine("\n✗ Incorrect credentials. Please try again.");
                 }
             }
 
-            // El menú principal se ejecuta mientras el usuario esté autenticado
-            while (isAuthenticated == true)
+            // --- MENÚ PRINCIPAL ---
+            while (isAuthenticated)
             {
                 Console.WriteLine("\n--- Regent Health Menu ---");
-                Console.WriteLine("1. Enter Patient Details");
-                Console.WriteLine("2. Book Appointment");
+                Console.WriteLine("1. Enter Patient Details & Book");
                 Console.WriteLine("3. View Booking Summary");
-                Console.WriteLine("4. View Highest & Lowest Cost");
-                Console.WriteLine("5. View Activity Log");
-                Console.WriteLine("6. Clear Booking");
                 Console.WriteLine("7. Logout");
                 Console.Write("Select option: ");
 
-                string option = Console.ReadLine();
+                // Leemos la opción y limpiamos espacios con Trim()
+                string option = Console.ReadLine()?.Trim() ?? "";
 
-                switch(option)
+                switch (option)
                 {
                     case "1":
-                        Console.Write("Enter patient full name: ");
-                        string name = Console.ReadLine();
+                        Console.Write("\nEnter patient full name: ");
+                        string name = Console.ReadLine() ?? "";
 
-                        // Validación: Que no esté vacío y que solo sean letras/espacios
                         if (string.IsNullOrWhiteSpace(name) || !name.All(c => char.IsLetter(c) || char.IsWhiteSpace(c)))
                         {
-                            Console.WriteLine("✗ Error: Invalid name. Use only letters.");
+                            Console.WriteLine("✗ Error: Invalid name.");
                         }
                         else
                         {
-                            // Llamamos al sistema para que cree al paciente
                             system.CreatePatient(name);
+                            Console.WriteLine("\n✓ Patient registered!");
+
+                            // Selección de Cita inmediata
+                            Console.WriteLine("\n--- Select Appointment Type ---");
+                            Console.WriteLine("1. General Consultation (£35)");
+                            Console.WriteLine("2. Nurse Check-up (£20)");
+                            Console.WriteLine("3. Blood Test (£15)");
+                            Console.WriteLine("4. Specialist Consultation (£60)");
+                            Console.Write("Choice: ");
+
+                            if (int.TryParse(Console.ReadLine(), out int choice))
+                            {
+                                system.GetCurrentPatient().SetAppointment(choice);
+                                Console.WriteLine($"\n✓ {system.GetCurrentPatient().AppointmentType} saved for {name}!");
+                            }
+                        }
+                        break;
+
+                    case "3":
+                        // OBTENER EL PACIENTE DEL SISTEMA
+                        var p = system.GetCurrentPatient();
+
+                        if (p == null)
+                        {
+                            Console.WriteLine("\n******************************************");
+                            Console.WriteLine("✗ ERROR: No hay ningún paciente registrado.");
+                            Console.WriteLine("Por favor, usa la opción 1 primero.");
+                            Console.WriteLine("******************************************");
+                        }
+                        else
+                        {
+                            // MOSTRAR EL RESUMEN REAL
+                            Console.WriteLine("\n========================================");
+                            Console.WriteLine("        PATIENT BOOKING SUMMARY         ");
+                            Console.WriteLine("========================================");
+                            Console.WriteLine($"Full Name:    {p.FullName}");
+                            Console.WriteLine($"Email:        {p.Email}");
+                            Console.WriteLine("----------------------------------------");
                             
-                            // Mostramos que funcionó usando los Getters que creaste en Patient.cs
-                            Console.WriteLine("\n✓ Patient details registered!");
-                            Console.WriteLine("Name: " + system.GetCurrentPatient().FullName);
-                            Console.WriteLine("Email: " + system.GetCurrentPatient().Email);
+                            // 3. AÑADIMOS ESTA LÍNEA PARA VER LA FECHA EN PANTALLA
+                                Console.WriteLine($"Date:         {p.AppointmentDate}");
+                            if (string.IsNullOrEmpty(p.AppointmentType))
+                            {
+                                Console.WriteLine("Appointment:  Not selected yet.");
+                            }
+                            else
+                            {
+                                Console.WriteLine($"Service:      {p.AppointmentType}");
+                                Console.WriteLine($"Total Price:  £{p.AppointmentPrice}");
+                            }
+                            Console.WriteLine("========================================");
                         }
                         break;
 
                     case "7":
                         isAuthenticated = false;
-                        Console.WriteLine("Logged out.");
+                        Console.WriteLine("Logged out successfuly.");
                         break;
 
                     default:
-                        Console.WriteLine("Invalid option. Please try again.");
+                        Console.WriteLine($"\n[!] Option '{option}' not recognized. Try pressing 1, 3 or 7.");
                         break;
                 }
-            } // <--- CORRECCIÓN: Aquí cerraba correctamente el bucle del menú
+            }
 
-            // Once the loop ends, the program moves to this line
             Console.WriteLine("\nPress any key to exit...");
             Console.ReadKey();
         }

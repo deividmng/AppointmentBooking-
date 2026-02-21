@@ -1,22 +1,17 @@
-using System;
-
 namespace RegentHealthBookingSystem
 {
     class BookingSystem
     {
-        // Guardamos al paciente actual aquí
-        private Patient currentPatient;
+        private Patient currentPatient; // La variable debe llamarse igual que la que usas abajo
 
-        // Método para crear el paciente usando el "molde" que ya hiciste
         public void CreatePatient(string name)
         {
             currentPatient = new Patient(name);
         }
 
-        // Método para poder leer los datos del paciente desde el Program.cs
         public Patient GetCurrentPatient()
         {
-            return currentPatient;
+            return currentPatient; // Si esto devuelve null, el case 3 dirá "No patient found"
         }
     }
 }
