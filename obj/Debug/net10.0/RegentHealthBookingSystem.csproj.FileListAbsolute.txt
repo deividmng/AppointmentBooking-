@@ -1,0 +1,14 @@
+C:\Users\manga\Desktop\RegentHealt\RegentHealthBookingSystem\bin\Debug\net10.0\RegentHealthBookingSystem.exe
+C:\Users\manga\Desktop\RegentHealt\RegentHealthBookingSystem\bin\Debug\net10.0\RegentHealthBookingSystem.deps.json
+C:\Users\manga\Desktop\RegentHealt\RegentHealthBookingSystem\bin\Debug\net10.0\RegentHealthBookingSystem.runtimeconfig.json
+C:\Users\manga\Desktop\RegentHealt\RegentHealthBookingSystem\bin\Debug\net10.0\RegentHealthBookingSystem.dll
+C:\Users\manga\Desktop\RegentHealt\RegentHealthBookingSystem\bin\Debug\net10.0\RegentHealthBookingSystem.pdb
+C:\Users\manga\Desktop\RegentHealt\RegentHealthBookingSystem\obj\Debug\net10.0\RegentHealthBookingSystem.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\manga\Desktop\RegentHealt\RegentHealthBookingSystem\obj\Debug\net10.0\RegentHealthBookingSystem.AssemblyInfoInputs.cache
+C:\Users\manga\Desktop\RegentHealt\RegentHealthBookingSystem\obj\Debug\net10.0\RegentHealthBookingSystem.AssemblyInfo.cs
+C:\Users\manga\Desktop\RegentHealt\RegentHealthBookingSystem\obj\Debug\net10.0\RegentHealthBookingSystem.csproj.CoreCompileInputs.cache
+C:\Users\manga\Desktop\RegentHealt\RegentHealthBookingSystem\obj\Debug\net10.0\RegentHealthBookingSystem.dll
+C:\Users\manga\Desktop\RegentHealt\RegentHealthBookingSystem\obj\Debug\net10.0\refint\RegentHealthBookingSystem.dll
+C:\Users\manga\Desktop\RegentHealt\RegentHealthBookingSystem\obj\Debug\net10.0\RegentHealthBookingSystem.pdb
+C:\Users\manga\Desktop\RegentHealt\RegentHealthBookingSystem\obj\Debug\net10.0\RegentHealthBookingSystem.genruntimeconfig.cache
+C:\Users\manga\Desktop\RegentHealt\RegentHealthBookingSystem\obj\Debug\net10.0\ref\RegentHealthBookingSystem.dll
