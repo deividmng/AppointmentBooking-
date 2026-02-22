@@ -76,39 +76,58 @@ namespace RegentHealthBookingSystem
                         }
                         break;
 
-                    case "3":
-                        // OBTENER EL PACIENTE DEL SISTEMA
-                        var p = system.GetCurrentPatient();
+                    // case "3":
+                    //     // OBTENER EL PACIENTE DEL SISTEMA
+                    //     // var p = system.GetCurrentPatient();     
+                    //     // Obtenemos la lista completa del sistema
+                    //     List<Patient> todos = system.GetAllPatients();
+                    //     if (todos.Count == 0) // Si no hay pacientes registrados, mostramos un mensaje de error
+                    //     {
+                    //         Console.WriteLine("\n******************************************");
+                    //         Console.WriteLine("✗ ERROR: No hay ningún paciente registrado.");
+                    //         Console.WriteLine("Por favor, usa la opción 1 primero.");
+                    //         Console.WriteLine("******************************************");
+                    //     }
+                    //     else
+                    //     {
+                    //         // MOSTRAR EL RESUMEN REAL
+                    //         Console.WriteLine("\n========================================");
+                    //         Console.WriteLine("        PATIENT BOOKING SUMMARY         ");
+                    //         Console.WriteLine("========================================");
+                    //         Console.WriteLine($"Full Name:    {p.FullName}");
+                    //         Console.WriteLine($"Email:        {p.Email}");
+                    //         Console.WriteLine("----------------------------------------");
 
-                        if (p == null)
+                    //         // 3. AÑADIMOS ESTA LÍNEA PARA VER LA FECHA EN PANTALLA
+                    //             Console.WriteLine($"Date:         {p.AppointmentDate}");
+                    //         if (string.IsNullOrEmpty(p.AppointmentType))
+                    //         {
+                    //             Console.WriteLine("Appointment:  Not selected yet.");
+                    //         }
+                    //         else
+                    //         {
+                    //             Console.WriteLine($"Service:      {p.AppointmentType}");
+                    //             Console.WriteLine($"Total Price:  £{p.AppointmentPrice}");
+                    //         }
+                    //         Console.WriteLine("========================================");
+                    //     }
+                    //     break;
+                    case "3":
+                        // Obtenemos la lista completa del sistema
+                        List<Patient> todos = system.GetAllPatients();
+
+                        if (todos.Count == 0)
                         {
-                            Console.WriteLine("\n******************************************");
-                            Console.WriteLine("✗ ERROR: No hay ningún paciente registrado.");
-                            Console.WriteLine("Por favor, usa la opción 1 primero.");
-                            Console.WriteLine("******************************************");
+                            Console.WriteLine("\n[!] No patients registered.");
                         }
                         else
                         {
-                            // MOSTRAR EL RESUMEN REAL
-                            Console.WriteLine("\n========================================");
-                            Console.WriteLine("        PATIENT BOOKING SUMMARY         ");
-                            Console.WriteLine("========================================");
-                            Console.WriteLine($"Full Name:    {p.FullName}");
-                            Console.WriteLine($"Email:        {p.Email}");
-                            Console.WriteLine("----------------------------------------");
-                            
-                            // 3. AÑADIMOS ESTA LÍNEA PARA VER LA FECHA EN PANTALLA
-                                Console.WriteLine($"Date:         {p.AppointmentDate}");
-                            if (string.IsNullOrEmpty(p.AppointmentType))
+                            Console.WriteLine("\n--- LIST OF ALL PATIENTS ---");
+                            foreach (Patient p in todos)
                             {
-                                Console.WriteLine("Appointment:  Not selected yet.");
+                                Console.WriteLine("Name: " + p.FullName + " | Date: " + p.AppointmentDate + " | Total: £" + p.AppointmentPrice);
                             }
-                            else
-                            {
-                                Console.WriteLine($"Service:      {p.AppointmentType}");
-                                Console.WriteLine($"Total Price:  £{p.AppointmentPrice}");
-                            }
-                            Console.WriteLine("========================================");
+                            Console.WriteLine("-----------------------------");
                         }
                         break;
 
