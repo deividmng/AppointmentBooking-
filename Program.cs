@@ -25,7 +25,7 @@ namespace RegentHealthBookingSystem
                 if (user == "D" && passWord == "R")
                 {
                     isAuthenticated = true;
-                    Console.WriteLine("\n✓ Login successful. Welcome, Doctor"  + user + "!");
+                    Console.WriteLine("\n✓ Login successful. Welcome, Doctor" + user + "!");
                 }
                 else
                 {
@@ -74,6 +74,7 @@ namespace RegentHealthBookingSystem
                             {
                                 system.GetCurrentPatient().SetAppointment(choice);
                                 Console.WriteLine($"\n✓ {system.GetCurrentPatient().AppointmentType} saved for {name}!");
+                        
                             }
                         }
                         break;
@@ -121,6 +122,14 @@ namespace RegentHealthBookingSystem
                         if (todos.Count == 0)
                         {
                             Console.WriteLine("\n[!] No patients registered.");
+                            Console.WriteLine("\n[!] No patients registered.");
+                            Console.WriteLine("\n[!] No patients registered.");
+                            Console.WriteLine("\n[!] No patients registered.");
+                            Console.WriteLine("\n[!] No patients registered.");
+                            Console.WriteLine("\n[!] No patients registered.");
+                            Console.WriteLine("\n[!] ------------------------.");
+                            
+                            
                         }
                         else
                         {
@@ -129,6 +138,14 @@ namespace RegentHealthBookingSystem
                             {
                                 Console.WriteLine("Name: " + p.FullName + " | Date: " + p.AppointmentDate + " | Total: £" + p.AppointmentPrice);
                             }
+                            Console.WriteLine("-----------------------------");
+                            Console.WriteLine("-----------------------------");
+                            Console.WriteLine("-----------------------------");
+                            Console.WriteLine("-----------------------------");
+                            Console.WriteLine("-----------------------------");
+                            Console.WriteLine("-----------------------------");
+                            Console.WriteLine("-----------------------------");
+                            Console.WriteLine("-----------------------------");
                             Console.WriteLine("-----------------------------");
                         }
                         break;
@@ -151,9 +168,21 @@ namespace RegentHealthBookingSystem
                         break;
 
                     case "5":
+                    //! Recuerda que para llalamr al metodo tienes que llamarlo usanso system, no currentPatient, porque el método ClearCurrentBooking() está en BookingSystem.cs, no en Patient.cs
+                        if (system.GetAllPatients().Count == 0)
+                        {
+                            Console.WriteLine("\n✓ No pacientes");
+                            Console.WriteLine("Pulse cualquier tecla para volver al menú...");
+                        }
+                        else
+                        {
+                            
+                            system.ShowAllPatientsWithIndex();
+                        }
+
+                        // Opcional: una confirmación visual extra
                         
-                            Console.WriteLine("Claring current booking...");
-                        
+                        Console.ReadKey();
                         break;
 
                     case "7":
