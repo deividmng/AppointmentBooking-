@@ -31,7 +31,8 @@ namespace RegentHealthBookingSystem
         // NUEVO MÉTODO: Para que el Case 3 pueda ver a TODOS
         public List<Patient> GetAllPatients()
         {
-            return patients;
-        }
+            // OrderByDescending organiza de mayor a menor basándose en la propiedad que elijas
+            return patients.OrderByDescending(p => p.AppointmentPrice).ToList();
+        }                       
     }
 }

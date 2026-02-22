@@ -25,7 +25,7 @@ namespace RegentHealthBookingSystem
                 if (user == "D" && passWord == "R")
                 {
                     isAuthenticated = true;
-                    Console.WriteLine("\n✓ Login successful. Welcome, Doctor!");
+                    Console.WriteLine("\n✓ Login successful. Welcome, Doctor"  + user + "!");
                 }
                 else
                 {
@@ -39,6 +39,8 @@ namespace RegentHealthBookingSystem
                 Console.WriteLine("\n--- Regent Health Menu ---");
                 Console.WriteLine("1. Enter Patient Details & Book");
                 Console.WriteLine("3. View Booking Summary");
+                Console.WriteLine("4.  View Highest and Lowest Cost Appointment ");
+                Console.WriteLine("5. Clear Current Booking ");
                 Console.WriteLine("7. Logout");
                 Console.Write("Select option: ");
 
@@ -129,6 +131,29 @@ namespace RegentHealthBookingSystem
                             }
                             Console.WriteLine("-----------------------------");
                         }
+                        break;
+                    case "4":
+                        var sortedPatients = system.GetAllPatients();
+
+                        if (sortedPatients == null || sortedPatients.Count == 0)
+                        {
+                            Console.WriteLine("\n[!] No patients registered.");
+                        }
+                        else
+                        {
+                            Console.WriteLine("\n--- PATIENTS SORTED BY PRICE (DESC) ---");
+                            foreach (Patient p in sortedPatients)
+                            {
+                                Console.WriteLine("Name: " + p.FullName + " | Date: " + p.AppointmentDate + " | Total: £" + p.AppointmentPrice);
+                            }
+                            Console.WriteLine("----------------------------------------");
+                        }
+                        break;
+
+                    case "5":
+                        
+                            Console.WriteLine("Claring current booking...");
+                        
                         break;
 
                     case "7":

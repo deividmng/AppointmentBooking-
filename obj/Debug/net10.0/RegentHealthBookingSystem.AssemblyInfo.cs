@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("RegentHealthBookingSystem")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+a1f9057db3427403f8cee9317658fa0a76857625")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+0c1d5364bbb72b9ee408b1751c8cd41eb656c751")]
 [assembly: System.Reflection.AssemblyProductAttribute("RegentHealthBookingSystem")]
 [assembly: System.Reflection.AssemblyTitleAttribute("RegentHealthBookingSystem")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
