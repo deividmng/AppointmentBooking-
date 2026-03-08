@@ -7,25 +7,25 @@ namespace RegentHealthBookingSystem
     {
         static void Main(string[] args)
         {
-            // Inicializamos el sistema
             BookingSystem system = new BookingSystem();
             bool isAuthenticated = false;
+            string user = string.Empty;
 
             Console.WriteLine("--- System Of Gestion Regent Health ---");
 
-            // --- SISTEMA DE LOGIN ---
+            // login loop using specified credentials
             while (!isAuthenticated)
             {
                 Console.Write("\nUsername: ");
-                string user = Console.ReadLine();
-
+                user = Console.ReadLine() ?? string.Empty;
                 Console.Write("Password: ");
-                string passWord = Console.ReadLine();
+                string passWord = Console.ReadLine() ?? string.Empty;
 
-                if (user == "D" && passWord == "R")
+                if (user == "d" && passWord == "r")
                 {
                     isAuthenticated = true;
-                    Console.WriteLine("\n✓ Login successful. Welcome, Doctor" + user + "!");
+                    system.LogAction("Logged in successfully");
+                    Console.WriteLine("\n✓ Login successful. Welcome, Doctor " + user + "!");
                 }
                 else
                 {
@@ -33,26 +33,31 @@ namespace RegentHealthBookingSystem
                 }
             }
 
-            // --- MENÚ PRINCIPAL ---
             while (isAuthenticated)
             {
+                var recent = system.GetRecentActions();
+                if (recent.Length > 0)
+                {
+                    Console.WriteLine("\n--- Recent actions ---");
+                    foreach (var act in recent)
+                        Console.WriteLine(act);
+                    Console.WriteLine("-----------------------");
+                }
+
                 Console.WriteLine("\n--- Regent Health Menu ---");
                 Console.WriteLine("1. Enter Patient Details & Book");
                 Console.WriteLine("3. View Booking Summary");
-                Console.WriteLine("4.  View Highest and Lowest Cost Appointment ");
-                Console.WriteLine("5. Clear Current Booking ");
-                Console.WriteLine("7. Logout");
+                Console.WriteLine("4. View Highest/Lowest Cost Appointment Type");
+                Console.WriteLine("5. Clear Current Booking");
+                Console.WriteLine("6. Logout");
                 Console.Write("Select option: ");
-
-                // Leemos la opción y limpiamos espacios con Trim()
-                string option = Console.ReadLine()?.Trim() ?? "";
+                string option = Console.ReadLine()?.Trim() ?? string.Empty;
 
                 switch (option)
                 {
                     case "1":
                         Console.Write("\nEnter patient full name: ");
-                        string name = Console.ReadLine() ?? "";
-
+                        string name = Console.ReadLine() ?? string.Empty;
                         if (string.IsNullOrWhiteSpace(name) || !name.All(c => char.IsLetter(c) || char.IsWhiteSpace(c)))
                         {
                             Console.WriteLine("✗ Error: Invalid name.");
@@ -60,140 +65,97 @@ namespace RegentHealthBookingSystem
                         else
                         {
                             system.CreatePatient(name);
-                            Console.WriteLine("\n✓ Patient registered!");
 
-                            // Selección de Cita inmediata
                             Console.WriteLine("\n--- Select Appointment Type ---");
                             Console.WriteLine("1. General Consultation (£35)");
                             Console.WriteLine("2. Nurse Check-up (£20)");
                             Console.WriteLine("3. Blood Test (£15)");
                             Console.WriteLine("4. Specialist Consultation (£60)");
                             Console.Write("Choice: ");
+                            int choice;
+                            while (!int.TryParse(Console.ReadLine(), out choice) || choice < 1 || choice > 4)
+                                Console.WriteLine("Invalid choice. Enter 1-4:");
 
-                            if (int.TryParse(Console.ReadLine(), out int choice))
+                            Console.Write("Enter date (yyyy-MM-dd): ");
+                            DateTime date;
+                            while (!DateTime.TryParseExact(Console.ReadLine() ?? string.Empty, "yyyy-MM-dd", null, System.Globalization.DateTimeStyles.None, out date)
+                            || date.Date <= DateTime.Today)
                             {
-                                system.GetCurrentPatient().SetAppointment(choice);
-                                Console.WriteLine($"\n✓ {system.GetCurrentPatient().AppointmentType} saved for {name}!");
-                        
+                                Console.WriteLine("Invalid date. Enter future date yyyy-MM-dd:");
                             }
+
+                            Console.Write("Enter time (HH:mm): ");
+                            string time;
+                            while (true)
+                            {
+                                time = Console.ReadLine() ?? string.Empty;
+                                if (TimeSpan.TryParseExact(time, @"hh\:mm", null, out _)) break;
+                                Console.WriteLine("Invalid time. Use HH:mm format:");
+                            }
+
+                            system.BookAppointment(choice, date, time);
+                            Console.WriteLine("\n✓ Appointment booked for " + name + "!\n");
                         }
                         break;
 
-                    // case "3":
-                    //     // OBTENER EL PACIENTE DEL SISTEMA
-                    //     // var p = system.GetCurrentPatient();     
-                    //     // Obtenemos la lista completa del sistema
-                    //     List<Patient> todos = system.GetAllPatients();
-                    //     if (todos.Count == 0) // Si no hay pacientes registrados, mostramos un mensaje de error
-                    //     {
-                    //         Console.WriteLine("\n******************************************");
-                    //         Console.WriteLine("✗ ERROR: No hay ningún paciente registrado.");
-                    //         Console.WriteLine("Por favor, usa la opción 1 primero.");
-                    //         Console.WriteLine("******************************************");
-                    //     }
-                    //     else
-                    //     {
-                    //         // MOSTRAR EL RESUMEN REAL
-                    //         Console.WriteLine("\n========================================");
-                    //         Console.WriteLine("        PATIENT BOOKING SUMMARY         ");
-                    //         Console.WriteLine("========================================");
-                    //         Console.WriteLine($"Full Name:    {p.FullName}");
-                    //         Console.WriteLine($"Email:        {p.Email}");
-                    //         Console.WriteLine("----------------------------------------");
-
-                    //         // 3. AÑADIMOS ESTA LÍNEA PARA VER LA FECHA EN PANTALLA
-                    //             Console.WriteLine($"Date:         {p.AppointmentDate}");
-                    //         if (string.IsNullOrEmpty(p.AppointmentType))
-                    //         {
-                    //             Console.WriteLine("Appointment:  Not selected yet.");
-                    //         }
-                    //         else
-                    //         {
-                    //             Console.WriteLine($"Service:      {p.AppointmentType}");
-                    //             Console.WriteLine($"Total Price:  £{p.AppointmentPrice}");
-                    //         }
-                    //         Console.WriteLine("========================================");
-                    //     }
-                    //     break;
                     case "3":
-                        // Obtenemos la lista completa del sistema
-                        List<Patient> todos = system.GetAllPatients();
-
-                        if (todos.Count == 0)
+                        var patient = system.GetCurrentPatient();
+                        var appointment = system.GetCurrentAppointment();
+                        if (patient == null || appointment == null)
                         {
-                            Console.WriteLine("\n[!] No patients registered.");
-                            Console.WriteLine("\n[!] No patients registered.");
-                            Console.WriteLine("\n[!] No patients registered.");
-                            Console.WriteLine("\n[!] No patients registered.");
-                            Console.WriteLine("\n[!] No patients registered.");
-                            Console.WriteLine("\n[!] No patients registered.");
-                            Console.WriteLine("\n[!] ------------------------.");
-                            
-                            
+                            Console.WriteLine("\n[!] No current booking available.");
                         }
                         else
                         {
-                            Console.WriteLine("\n--- LIST OF ALL PATIENTS ---");
-                            foreach (Patient p in todos)
-                            {
-                                Console.WriteLine("Name: " + p.FullName + " | Date: " + p.AppointmentDate + " | Total: £" + p.AppointmentPrice);
-                            }
-                            Console.WriteLine("-----------------------------");
-                            Console.WriteLine("-----------------------------");
-                            Console.WriteLine("-----------------------------");
-                            Console.WriteLine("-----------------------------");
-                            Console.WriteLine("-----------------------------");
-                            Console.WriteLine("-----------------------------");
-                            Console.WriteLine("-----------------------------");
-                            Console.WriteLine("-----------------------------");
-                            Console.WriteLine("-----------------------------");
+                            Console.WriteLine("\n===== CURRENT BOOKING =====");
+                            Console.WriteLine("Name : " + patient.FullName);
+                            Console.WriteLine("Email: " + patient.Email);
+                            Console.WriteLine("Type : " + appointment.AppointmentType);
+                            Console.WriteLine("Date : " + appointment.AppointmentDate.ToString("yyyy-MM-dd"));
+                            Console.WriteLine("Time : " + appointment.AppointmentTime);
+                            Console.WriteLine("Price: £" + appointment.Price);
+                            Console.WriteLine("Class: " + appointment.Classification);
+                            Console.WriteLine("===========================\n");
+                            system.LogAction("Viewed booking summary");
                         }
                         break;
-                    case "4":
-                        var sortedPatients = system.GetAllPatients();
 
-                        if (sortedPatients == null || sortedPatients.Count == 0)
+                    case "4":
+                        var (high, low) = system.GetHighestLowestCostTypes();
+                        if (high == null)
                         {
-                            Console.WriteLine("\n[!] No patients registered.");
+                            Console.WriteLine("\n[!] No bookings to analyse.");
                         }
                         else
                         {
-                            Console.WriteLine("\n--- PATIENTS SORTED BY PRICE (DESC) ---");
-                            foreach (Patient p in sortedPatients)
-                            {
-                                Console.WriteLine("Name: " + p.FullName + " | Date: " + p.AppointmentDate + " | Total: £" + p.AppointmentPrice);
-                            }
-                            Console.WriteLine("----------------------------------------");
+                            Console.WriteLine("\nHighest cost appointment type: " + high);
+                            Console.WriteLine("Lowest cost appointment type: " + low);
+                            system.LogAction("Viewed highest/lowest cost types");
                         }
                         break;
 
                     case "5":
-                    //! Recuerda que para llalamr al metodo tienes que llamarlo usanso system, no currentPatient, porque el método ClearCurrentBooking() está en BookingSystem.cs, no en Patient.cs
-                        if (system.GetAllPatients().Count == 0)
-                        {
-                            Console.WriteLine("\n✓ No pacientes");
-                            Console.WriteLine("Pulse cualquier tecla para volver al menú...");
-                        }
-                        else
-                        {
-                            
-                            system.ShowAllPatientsWithIndex();
-                        }
-
-                        // Opcional: una confirmación visual extra
-                        
-                        Console.ReadKey();
+                        system.ClearCurrentBooking();
+                        Console.WriteLine("\nCurrent booking cleared.");
                         break;
 
-                    case "7":
+                    case "6":
                         isAuthenticated = false;
-                        Console.WriteLine("Logged out successfuly.");
+                        system.LogAction("Logged out");
+                        Console.WriteLine("\nLogged out successfully.");
                         break;
 
                     default:
-                        Console.WriteLine($"\n[!] Option '{option}' not recognized. Try pressing 1, 3 or 7.");
+                        Console.WriteLine("\n[!] Option '" + option + "' not recognized.");
                         break;
                 }
+            }
+
+            Console.WriteLine("\n--- Price classification examples (Part 2) ---");
+            double[] samplePrices = { -5, 0, 15, 50, 100 };
+            foreach (double p in samplePrices)
+            {
+                Console.WriteLine(p + " -> " + Classify_appointment.ClassifyAppointmentPrice(p));
             }
 
             Console.WriteLine("\nPress any key to exit...");
